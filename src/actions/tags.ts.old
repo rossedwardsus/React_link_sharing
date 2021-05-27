@@ -1,0 +1,26 @@
+import { ThunkAction } from 'redux-thunk';
+import { Action, Dispatch } from 'redux';
+import { RootState } from '../reducers/rootReducer';
+
+export const addTAG = (tag: any) => {
+
+//alert();
+    return async (dispatch: any, getState: any) =>{
+
+        //console.log(bp_name);
+
+      //alert();
+
+        dispatch({
+        //return{
+            type: "TAG",
+            payload: {tag: tag}
+        //}
+        });
+    }
+            
+   
+
+}
+
+

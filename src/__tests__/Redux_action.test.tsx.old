@@ -1,0 +1,50 @@
+import React from 'react';
+import { shallow } from 'enzyme/build';
+import mockAxios from 'axios';
+import renderer from 'react-test-renderer';
+
+import { Subtopic } from '../components/Outline/subtopic';
+
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+
+Enzyme.configure({ adapter: new Adapter() });
+
+//props.onSubtopicTextChange(e, props.topic_id, props.subtopic.id)}
+//props.outlineAddSubtopic(props.subtopic.id, props.subtopic.id)}
+
+describe('<MyComponent />', () => {
+  let wrapper;
+
+  //const component = renderer.create(
+  //  <Link page="http://www.facebook.com">Facebook</Link>,
+  //  <Subtopic topic_id=1 subtopic_id=1 conSubtopicTextChange={onSubtopic()} outlineAddSubtopic(props.subtopic.id, props.subtopic.id)};
+  //);
+  //let tree = component.toJSON();
+  //expect(tree).toMatchSnapshot();
+
+  //const wrapper = shallow((
+  //  <MyComponent>
+  //    <div className="unique" />
+  //  </MyComponent>
+  //));
+  //expect(wrapper.contains(<div className="unique" />)).to.equal(true);
+
+
+
+  beforeEach(() => {
+    //wrapper = shallow(<MyComponent />);
+  });
+
+  it('should get response successfully', async () => {
+    // define the result via axios
+    //mockAxios.mockImplementationOnce(() => (
+    //  Promise.resolve({ data: { foo: 'foo' } })
+    //));
+
+    // <MyComponent /> component contains `doSubmit()` method which calls an api via axios
+    // Assuming that the response will be stored in the state
+    //await wrapper.instance().doSubmit();
+    //expect(wrapper.instance().state.data).toEqual({ foo: 'foo' });
+  });
+});

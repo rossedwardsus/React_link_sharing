@@ -1,0 +1,96 @@
+import { ThunkAction } from 'redux-thunk';
+import { Action, Dispatch } from 'redux';
+import { RootState } from '../reducers/rootReducer';
+
+//import { v4 as uuidv4 } from 'uuid';
+
+export const createChannelAction = (id: any, channelName: any, about: any): ThunkAction<void, RootState, unknown, Action<string>> => {
+
+//alert();
+    return async (dispatch: any, getState: any) =>{
+
+        //console.log(bp_name);
+
+      //alert();
+
+        dispatch({
+        //return{
+            type: "CREATE_YOUTUBE_CHANNEL",
+            payload: {id: id, channelName: channelName, about: about}
+        //}
+        });
+    }
+            
+   
+
+}
+
+
+export const saveChannelAction = (id: any, channelName: any, channelAbout: any, channelType: any, tags): ThunkAction<void, RootState, unknown, Action<string>> => {
+
+    return async (dispatch: any, getState: any) =>{
+
+      //alert();
+
+        /*
+        dispatch({
+            type: "CURRENT_SONG_DATA_LOADING" 
+        });
+      
+        dispatch({
+            type: "CURRENT_SONG_DATA_SUCCESS" ,
+            payload: res.data
+        });*/
+
+        //success
+        dispatch({
+        //return{
+            type: "SAVE_CHANNEL",
+            payload: {id: id, channelName: channelName, channelAbout: channelAbout, channelType}
+        //}
+        });
+        //error
+        //dispatch({
+        //return{
+        //    type: "ERROR",
+        //    payload: "payloadpayloadasync"
+        //}
+        //});
+    }
+            
+}
+
+
+export const saveMarketingPlanAction = (plan_id: any, marketingValue: any) => {
+
+    //alert();
+    return (dispatch: any, getState: any) =>{
+
+        //alert();
+     
+        dispatch({
+        //return{
+            type: "SAVE_MARKETING_PLAN",
+            payload: {id: plan_id, marketingValue: marketingValue}
+        //}
+        });
+    }
+}
+
+export const saveRevenuePlanAction = (plan_id: any, revenueValue: any) => {
+
+//alert();
+    return async (dispatch: any, getState: any) =>{
+
+      //alert();
+
+        
+        dispatch({
+        //return{
+            type: "SAVE_REVENUE_PLAN",
+            payload: {id: plan_id, revenueValue: revenueValue}
+        //}
+        });
+    }
+            
+}

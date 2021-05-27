@@ -1,0 +1,94 @@
+export const createBusinessPlanAction = (bp_id: any, businessPlanName: any, about: any) => {
+
+//alert();
+    return async (dispatch: any, getState: any) =>{
+
+        //console.log(bp_name);
+
+      //alert();
+
+        dispatch({
+        //return{
+            type: "CREATE_BUSINESS_PLAN",
+            payload: {id: bp_id, name: businessPlanName, about: about}
+        //}
+        });
+    }
+            
+   
+
+}
+
+
+const saveNewBusinessPlanAction = () => {
+
+//alert();
+    return async (dispatch: any, getState: any) =>{
+
+      //alert();
+
+        /*
+        dispatch({
+            type: "CURRENT_SONG_DATA_LOADING" 
+        });
+      
+        dispatch({
+            type: "CURRENT_SONG_DATA_SUCCESS" ,
+            payload: res.data
+        });*/
+
+        //success
+        dispatch({
+        //return{
+            type: "NEW_BUSINESS_PLAN",
+            payload: "payloadpayloadasync"
+        //}
+        });
+        //error
+        //dispatch({
+        //return{
+        //    type: "ERROR",
+        //    payload: "payloadpayloadasync"
+        //}
+        //});
+    }
+            
+}
+
+
+export default saveNewBusinessPlanAction;
+
+
+export const saveMarketingPlanAction = (plan_id: any, marketingValue: any) => {
+
+    //alert();
+    return (dispatch: any, getState: any) =>{
+
+        //alert();
+     
+        dispatch({
+        //return{
+            type: "SAVE_MARKETING_PLAN",
+            payload: {id: plan_id, marketingValue: marketingValue}
+        //}
+        });
+    }
+}
+
+export const saveRevenuePlanAction = (plan_id: any, revenueValue: any) => {
+
+//alert();
+    return async (dispatch: any, getState: any) =>{
+
+      //alert();
+
+        
+        dispatch({
+        //return{
+            type: "SAVE_REVENUE_PLAN",
+            payload: {id: plan_id, revenueValue: revenueValue}
+        //}
+        });
+    }
+            
+}
