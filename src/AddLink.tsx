@@ -37,7 +37,7 @@ const schema = yup.object().shape({
 
 const SCInput = styled.input``
 
-function Project() {
+function AddLink() {
 
   const { projectId } = useParams<any>();
   const projects = useSelector((state: any) => state.projects.projects);
@@ -200,4 +200,4 @@ function Project() {
   );
 }
 
-export default Project;
+export default AddLink;

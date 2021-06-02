@@ -23,7 +23,7 @@ import styled from "styled-components";
 
 import moment from 'moment';
 
-import { addProjectLinkAction } from './actions/projects';
+import { addProjectLinkAction } from '../../actions/projects';
 
 const schema = yup.object().shape({
   //linkName: yup.string().required(),
@@ -37,16 +37,16 @@ const schema = yup.object().shape({
 
 const SCInput = styled.input``
 
-function Projects() {
+function Links() {
 
-  const { projectId } = useParams<any>();
-  const projects = useSelector((state: any) => state.projects.projects);
-  const index = projects.findIndex((project: any) => project.projectId == parseInt(projectId));
-  const project = projects[index];
+  //const { projectId } = useParams<any>();
+  const links = useSelector((state: any) => state.links.links);
+  //const index = projects.findIndex((project: any) => project.projectId == parseInt(projectId));
+  //const project = projects[index];
   
   //const state = useSelector((state: any) => state);
-  //const [projectLink, setProjectLink] = useState("");
-  //const [newProjectLink, setNewProjectLink]= useState("");
+  const [projectLink, setProjectLink] = useState("");
+  const [newProjectLink, setNewProjectLink]= useState("");
   const dispatch = useDispatch();
 
   //const { register, formState: { errors }, handleSubmit } = useForm();
@@ -59,7 +59,7 @@ function Projects() {
 
   const onProjectLinkChange = (e: any) => {
 
-  		//setProjectLink(e.target.value);
+  		setProjectLink(e.target.value);
 
   }
 
@@ -74,7 +74,7 @@ function Projects() {
 
     //link, name, description
 
-    //dispatch(addProjectLinkAction(projectId, data.linkName1, data.linkDescription1, data.link1));
+    dispatch(addProjectLinkAction("projectId", data.linkName1, data.linkDescription1, data.link1));
 
     //history.push("/projects/1");
   }
@@ -84,24 +84,25 @@ function Projects() {
     <div style={{textAlign: "left"}}>
       <header>
       	<br/>
-        Projects
+        Links
         <br/>
+        <br/>
+        {JSON.stringify("project")}
         <br/>
         sort by domains/date added
         <br/>
-        <br/>
-        {projects.map((project: any) => 
+        {links.map((link: any) => 
         	<>
             <Paper>
               <Typography>
-                <Link to={"/user/projects/" + project.projectId} target="_blank">{project.projectName}</Link>
-                <br/>
-                name {project.projectName}
+                name {link.linkName}
               </Typography>
               <br/>
               <Typography>
-                description {"link.linkDescription"}
+                description {link.linkDescription}
               </Typography>
+              <br/>
+              <Link to={link.link} target="_blank">{link.linkName}</Link>
               <br/>
               <Typography>
                 date added{moment().format()}
@@ -115,7 +116,9 @@ function Projects() {
         )}
         <br/>
         <br/>
-        Add project link
+        Add link
+        <br/>
+        Project
         <br/>
         Link name
         <br/>
@@ -189,7 +192,7 @@ function Projects() {
           label="Link"
           placeholder="Placeholder"
           fullWidth
-          value={"newProjectLink"}
+          value={newProjectLink}
           variant="outlined"
           onChange={onProjectLinkChange}
         />
@@ -200,4 +203,4 @@ function Projects() {
   );
 }
 
-export default Projects;
+export default Links;

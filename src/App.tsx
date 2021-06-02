@@ -7,7 +7,7 @@ import Home from './Home';
 import createProject from './Create_project';
 import project from './Project';
 import Projects from './Projects';
-import Links from './Links';
+import Links from './Components/Links/Links';
 import AddLink from './AddLink';
 
 import Grid, {GridSpacing} from '@material-ui/core/Grid';

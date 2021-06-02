@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
+import { Link as RRDLink } from 'react-router-dom';
 
-
-import { Link } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
 import Grid, {GridSpacing} from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -22,8 +22,11 @@ import * as yup from "yup";
 import styled from "styled-components";
 
 import moment from 'moment';
+import _ from 'lodash';
 
-import { addProjectLinkAction } from './actions/projects';
+import LinkComponent from './LinkComponent';
+
+import { addLinkAction, updateLinkAction } from '../../actions/links';
 
 const schema = yup.object().shape({
   //linkName: yup.string().required(),
@@ -35,24 +38,67 @@ const schema = yup.object().shape({
   //age: yup.number().positive().integer().required(),
 });
 
+interface Link {
+    projectId: number;
+    linkId: number;
+    linkName: string;
+    linkDescription: string;
+    linkUrl: string;
+    dateAdded: string;
+}
+
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+}));
+
 const SCInput = styled.input``
 
-function Project() {
+const Links = () => {
 
-  const { projectId } = useParams<any>();
-  const projects = useSelector((state: any) => state.projects.projects);
-  const index = projects.findIndex((project: any) => project.projectId == parseInt(projectId));
-  const project = projects[index];
+  const classes = useStyles();
+  const projects = useSelector((state: any) => state.links.projects1);
+  const links = useSelector((state: any) => state.links.links);
+  //const index = projects.findIndex((project: any) => project.projectId == parseInt(projectId));
+  //const project = projects[index];
+  const [addLinkProjectId, setAddLinkProjectId] = useState<number>();
   
-  const state = useSelector((state: any) => state);
+  //const state = useSelector((state: any) => state);
   const [projectLink, setProjectLink] = useState("");
-  const [newProjectLink, setNewProjectLink]= useState("");
+  const [newProjectLink, setNewProjectLink] = useState("");
+  const [orderBy, setOrderBy] = useState("");
+  const [linksSorted, setLinksSorted] = useState<any>([]);
   const dispatch = useDispatch();
 
   //const { register, formState: { errors }, handleSubmit } = useForm();
   const { control, register, handleSubmit, formState:{ errors } } = useForm({
     resolver: yupResolver(schema)
   });
+
+  useEffect(() => {
+
+      //console.log(orderBy);
+
+      //memo
+
+      if(orderBy == "date_added"){
+
+          setLinksSorted(_.orderBy(links, "dateAdded"));
+          console.log("linksSorted dateadded" + linksSorted);
+
+      }else if(orderBy == "domain"){
+
+          setLinksSorted(_.orderBy(links, "domain"));
+          console.log("linksSorted domain" + linksSorted);
+
+      }
+
+  }, [orderBy]);
 
   
   //filter by project id
@@ -69,12 +115,33 @@ function Project() {
 
   }
 
+  const handleProjectIdChange = (e: any) => {
+
+      //setProjectId(e.target.value);
+
+  } 
+
+  const handleSortByChange = (e: any) => {
+
+      setOrderBy(e.target.value);
+
+  } 
+
+  //const updateLink = (linkId: any) => {
+
+  //    dispatch(updateLinkAction("projectId", linkId, linkName, linkDescription, linkUrl, dateAdded));
+
+  //}
+
   const onSubmit = (data: any) => {
     console.log(JSON.stringify(data));
 
     //link, name, description
 
-    dispatch(addProjectLinkAction(projectId, data.linkName1, data.linkDescription1, data.link1));
+    let domain = (new URL(data.linkUrl));
+    let hostname = domain.hostname;
+
+    dispatch(addLinkAction("projectId", data.linkName, data.linkDescription, "domain", data.linkUrl));
 
     //history.push("/projects/1");
   }
@@ -84,24 +151,48 @@ function Project() {
     <div style={{textAlign: "left"}}>
       <header>
       	<br/>
-        Project Name{JSON.stringify(project.projectName)}
+        Links
         <br/>
-        {JSON.stringify(project)}
         <br/>
         sort by domains/date added
         <br/>
-        {projects[0].projectLinks.map((link: any) => 
+        <br/>
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel id="demo-simple-select-outlined-label">Order By</InputLabel>
+          <Select
+            labelId="demo-simple-select-outlined-label"
+            id="demo-simple-select-outlined"
+            value={orderBy}
+            onChange={handleSortByChange}
+            label="links screen"
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>        
+            <MenuItem value={"date_added"}>Date Add</MenuItem>
+            <MenuItem value={"domain"}>Domain</MenuItem>
+          </Select>
+        </FormControl>
+        <br/>
+        <br/>
+        {links.map((link: Link) => 
         	<>
+            linkcomponent
+            <br/>
+            <LinkComponent {...link} />
+            <br/>
             <Paper>
               <Typography>
                 name {link.linkName}
+                <br/>
+                {link.projectId}
               </Typography>
               <br/>
               <Typography>
                 description {link.linkDescription}
               </Typography>
               <br/>
-              <Link to={link.link} target="_blank">{link.linkName}</Link>
+              <RRDLink to={link.linkUrl} target="_blank">{link.linkName}</RRDLink>
               <br/>
               <Typography>
                 date added{moment().format()}
@@ -115,12 +206,40 @@ function Project() {
         )}
         <br/>
         <br/>
-        Add project link
+        Add link
+        <br/>
+        Project
+        <br/>
+        {projects.map((project: any) => project.projectId)}
         <br/>
         Link name
         <br/>
         <form onSubmit={handleSubmit(onSubmit)}>
           <br/>
+          <FormControl variant="outlined">
+            <InputLabel id="demo-simple-select-outlined-label">Age</InputLabel>
+            <Select
+              labelId="demo-simple-select-outlined-label"
+              id="demo-simple-select-outlined"
+              value={"age"}
+              onChange={handleProjectIdChange}
+              label="Age"
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {projects.map((project: any) => 
+                    <>
+                        project.projectId
+                        <br/>
+                        <MenuItem value={10}>Ten</MenuItem>
+                    </>
+              )}
+              <MenuItem value={10}>Ten</MenuItem>
+              <MenuItem value={20}>Twenty</MenuItem>
+              <MenuItem value={30}>Thirty</MenuItem>
+            </Select>
+          </FormControl>
           <Controller
             name="scinput"
             control={control}
@@ -134,7 +253,7 @@ function Project() {
           <br/>
           <br/>
           <Controller
-            name="linkName1"
+            name="linkName"
             control={control}
             defaultValue=""
             render={({ field }) => <TextField placeholder="linkName1" {...field} />}
@@ -146,7 +265,7 @@ function Project() {
           link description
           <br/>
           <Controller
-            name="linkDescription1"
+            name="linkDescription"
             control={control}
             defaultValue=""
             render={({ field }) => <TextField fullWidth multiline {...field} /> }
@@ -157,7 +276,7 @@ function Project() {
           link
           <br/>
           <Controller
-            name="link"
+            name="linkUrl"
             control={control}
             defaultValue=""
             render={({ field }) => <TextField multiline {...field} />}
@@ -176,7 +295,7 @@ function Project() {
           <br/>
           link
           <br/>
-          <input {...register("link", { required: true, maxLength: 20 })} />
+          <input {...register("linkUrl", { required: true, maxLength: 20 })} />
           <br/>
           {errors.linkName?.type === 'required' && "First name is required"}
           <br/>
@@ -200,4 +319,4 @@ function Project() {
   );
 }
 
-export default Project;
+export default Links;

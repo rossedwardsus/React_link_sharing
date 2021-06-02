@@ -20,7 +20,7 @@ const darkTheme = createMuiTheme({
       root: {         
       	fontSize: 15,         
       	color: 'blue',   
-      	backgroundColor: 'grey',
+      	backgroundColor: 'white',
       	size: "small"
 
       } 
