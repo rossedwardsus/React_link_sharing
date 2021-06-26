@@ -7,6 +7,8 @@ export const addLinkAction = (projectId: any, linkName: any, linkDescription: an
 //alert();
     return async (dispatch: any, getState: any) =>{
 
+        //uuid forlinkid
+
         //console.log(bp_name);
 
       //alert();
@@ -24,7 +26,7 @@ export const addLinkAction = (projectId: any, linkName: any, linkDescription: an
 }
 
 
-export const updateLinkAction = (projectId: any, linkId: any, projectName: any, projectDescription: any, linkUrl: any) => {
+export const updateLinkAction = (projectId: any, linkId: any, projectName: any, projectDescription: any, linkDomain: any, linkUrl: any) => {
 
 //alert();
     console.log("action" + projectName + " " + projectDescription);

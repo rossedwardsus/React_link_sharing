@@ -153,6 +153,7 @@ const Links = () => {
       	<br/>
         Links
         <br/>
+        {JSON.stringify(links)}
         <br/>
         sort by domains/date added
         <br/>

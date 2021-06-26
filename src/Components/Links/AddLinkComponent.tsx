@@ -94,6 +94,7 @@ function Links() {
         {links.map((link: any) => 
         	<>
             <Paper>
+              Project 
               <Typography>
                 name {link.linkName}
               </Typography>

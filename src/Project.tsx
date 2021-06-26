@@ -84,7 +84,7 @@ function Project() {
     <div style={{textAlign: "left"}}>
       <header>
       	<br/>
-        Project Name{JSON.stringify(project.projectName)}
+        Project Name{JSON.stringify(project.projectName)}/collaboratoes/invite/delete
         <br/>
         {JSON.stringify(project)}
         <br/>
@@ -102,6 +102,8 @@ function Project() {
               </Typography>
               <br/>
               <Link to={link.link} target="_blank">{link.linkName}</Link>
+              <br/>
+              Added by
               <br/>
               <Typography>
                 date added{moment().format()}

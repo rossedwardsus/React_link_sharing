@@ -29,11 +29,8 @@ import { addLinkAction, updateLinkAction } from '../../actions/links';
 
 const schema = yup.object().shape({
   //linkName: yup.string().required(),
-  //linkName1: yup.string().required(),
   //linkDescription: yup.string().required(),
-  //linkDescription1: yup.string().required(),
   //link: yup.string().required(),
-  //link1: yup.string().required(),
   //age: yup.number().positive().integer().required(),
 });
 
@@ -64,18 +61,27 @@ const LinkComponent = ({projectId, linkId, linkName, linkDescription, linkUrl, d
   //const {linkName, linkDescription, url} = props.props;
 
   const classes = useStyles();
-
   const links = useSelector((state: any) => state.links.links);
   const projects = useSelector((state: any) => state.links.projects1);
   const [updateLink, setUpdateLink] = useState(false);
-  const [selectedProjectId, setSelectedProjectId] = useState(0);
+  const [selectedProjectId, setSelectedProjectId] = useState(projectId);
   const [sortBy, setSortBy] = useState("");
+  const [linkDomain, setLinkDomain] = useState("");
+  const dispatch = useDispatch();
+  
+  const projectIndex = projects.findIndex((project: any) => project.projectId == projectId);
+  const project = projects[projectIndex];
 
   const linkIndex = links.findIndex((link: any) => link.linkId == linkId);
   const link = links[linkIndex];
 
-  const dispatch = useDispatch();
-  
+
+
+  const { control, register, handleSubmit, formState:{ errors } } = useForm({
+    resolver: yupResolver(schema)
+  });
+
+
   const btnUpdateLink = () => {
 
       setUpdateLink(!updateLink);
@@ -88,9 +94,13 @@ const LinkComponent = ({projectId, linkId, linkName, linkDescription, linkUrl, d
 
   } 
 
-  const { control, register, handleSubmit, formState:{ errors } } = useForm({
-    resolver: yupResolver(schema)
-  });
+  const linkAlreadyAdded = (linkUrl:any) => {
+
+    //links.map
+    links.some((link: any) => link.linkUrl === linkUrl);
+
+  }
+
 
   const onSubmit = (data: any) => {
     console.log(JSON.stringify(data));
@@ -100,7 +110,12 @@ const LinkComponent = ({projectId, linkId, linkName, linkDescription, linkUrl, d
     let domain = (new URL(data.linkUrl));
     let hostname = domain.hostname;
 
-    dispatch(updateLinkAction("projectId", linkId, data.linkName, data.linkDescription, data.url));
+
+    //if setSelectedProjectId !== projectId then use selectedProjectId
+
+    dispatch(updateLinkAction("projectId", linkId, data.linkName, data.linkDescription, linkDomain, data.url));
+
+    //reset to not edit screenor just say saved!
 
     //history.push("/projects/1");
   }
@@ -114,24 +129,32 @@ const LinkComponent = ({projectId, linkId, linkName, linkDescription, linkUrl, d
                   <br/>
                   <FormControl variant="outlined" className={classes.formControl}>
                     <InputLabel id="demo-simple-select-outlined-label">link Project</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-outlined-label"
-                      id="demo-simple-select-outlined"
-                      value={"age"}
-                      onChange={handleChange}
-                      label="Project"
-                      fullWidth
-                    >
-                     
-                      {projects.map((project: any) => 
-                            <>
-                                <MenuItem value={10}>Ten</MenuItem>
-                            </>
-                      )}
-                      <MenuItem value={0}>None</MenuItem>
-                      <MenuItem value={1}>Project1</MenuItem>
-                      <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
+                    <Controller
+                      name="linkProject"
+                      control={control}
+                      defaultValue={selectedProjectId}
+                      render={({ field: { onChange, onBlur, value, ref } }) => (
+                          <Select
+                            labelId="demo-simple-select-outlined-label"
+                            id="demo-simple-select-outlined"
+                            value={value}
+                            onChange={onChange}
+                            label="Project"
+                            fullWidth
+                          >
+                           
+                            {projects.map((project: any) => 
+                                  <>
+                                      <MenuItem value={10}>{project.linkProject}</MenuItem>
+                                  </>
+                            )}
+                            <MenuItem value={0}>None</MenuItem>
+                            <MenuItem value={1}>Project1</MenuItem>
+                            <MenuItem value={30}>Thirty</MenuItem>
+                          </Select>
+                       )}
+                      
+                    />
                   </FormControl>
                   <br/>
                   scinput1-{link.linkName}
@@ -147,37 +170,76 @@ const LinkComponent = ({projectId, linkId, linkName, linkDescription, linkUrl, d
                   <br/>
                   Connect to another project
                   <br/>
+                  Link Name
                   <br/>
                   <Controller
                     name="linkName"
                     control={control}
                     defaultValue={link.linkName}
-                    render={({ field }) => <TextField placeholder="linkName1" {...field} />}
+                    render={({ field }) => <TextField fullWidth placeholder="Link Name" {...field} />}
                   />20 charcters max
                   <br/>
-                  {errors.linkName1?.type === 'required' && "Link name1 is required"}
+                  {errors.linkName?.type === 'required' && "Link name1 is required"}
                   <br/>
                   <br/>
-                  link description
+                  Link Description
                   <br/>
                   <Controller
                     name="linkDescription"
                     control={control}
-                    defaultValue=""
+                    defaultValue={link.linkDescription}
                     render={({ field }) => <TextField fullWidth multiline {...field} /> }
                   />50 characters max
                   <br/>
-                  {errors.linkName1?.type === 'required' && "Link name1 is required"}
+                  {errors.linkDescription?.type === 'required' && "Link name1 is required"}
                   <br/>
-                  link
+                  Link Domain
                   <br/>
                   <Controller
-                    name="url"
+                    name="linkDomain"
                     control={control}
-                    defaultValue=""
-                    render={({ field }) => <TextField multiline {...field} />}
+                    defaultValue={linkDomain}
+                    render={(props: any) => <TextField value={linkDomain} fullWidth multiline /> }
+                  />50 characters max
+                  <br/>
+                  {errors.linkDomain?.type === 'required' && "Link name1 is required"}
+                  <br/>
+                  Link Url
+                  <br/>
+                  <Controller
+                    name="linkUrl"
+                    control={control}
+                    defaultValue={link.linkUrl}
+                    render={() => <TextField 
+                                    onChange={(e: any) => {
+                                             //let domain = (new URL(e.target.value));
+                                             //alert(domain);
+                                             //let hostname = domain.hostname;
+                                             //alert(hostname);
+
+                                             try {
+                                                //nonExistentFunction();
+                                                 new URL(e.target.value)
+                                                 let domain = (new URL(e.target.value));
+                                                 //alert(domain);
+                                                 alert(domain.hostname);
+                                                 setLinkDomain(domain.hostname);
+                                                 
+                                              } catch (error) {
+                                                //alert(error);
+                                                // expected output: ReferenceError: nonExistentFunction is not defined
+                                                // Note - error messages will vary depending on browser
+                                              }
+
+
+                                                                }}
+                                          fullWidth multiline />}
                   />
                   <br/>
+                  Recommended tags for this link
+                  <br/>
+                  <br/>
+                  test?
                   <br/>
                   name
                   <br/>
@@ -205,7 +267,7 @@ const LinkComponent = ({projectId, linkId, linkName, linkDescription, linkUrl, d
 
         <Paper>
           <Typography>
-            project
+            associated project
             <br/>
             name {linkName}
           </Typography>
@@ -219,6 +281,7 @@ const LinkComponent = ({projectId, linkId, linkName, linkDescription, linkUrl, d
           <br/>
           <RRDLink to={linkUrl} target="_blank">{linkName}</RRDLink>
           <br/>
+          Share link
           <br/>
           <Button onClick={btnUpdateLink}>Edit Link</Button>
           <br/>
